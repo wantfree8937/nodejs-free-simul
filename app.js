@@ -1,10 +1,14 @@
 import express from 'express';
+import dotenv from 'dotenv';
 import connect from './schemas/index.js';
-import TodosRouter from './routes/todos.router.js';
+import ItemRouter from './routes/items.router.js';
+import ChaRouter from './routes/characters.router.js';
 import ErrorHandlerMiddleware from './middlewares/error-handler.middleware.js';
 
+dotenv.config(); // dotenv를 초기화합니다.
+
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 connect();
 
@@ -25,8 +29,8 @@ router.get('/', (req, res) => {
   return res.json({ message: 'Hi!' });
 });
 
-// /api 주소로 접근하였을 때, router와 TodosRouter로 클라이언트의 요청이 전달됩니다.
-app.use('/api', [router, TodosRouter]);
+// /api 주소로 접근하였을 때, router, ChaRouter, ItemsRouter로 클라이언트의 요청이 전달됩니다.
+app.use('/api', [router, ChaRouter, ItemRouter]);
 
 // 에러 핸들링 미들웨어를 등록합니다.
 app.use(ErrorHandlerMiddleware);

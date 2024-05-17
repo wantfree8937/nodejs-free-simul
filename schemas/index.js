@@ -1,16 +1,20 @@
 import mongoose from 'mongoose';
 
-const connect = () => {
-  mongoose
-    .connect(
-      // 빨간색으로 표시된 부분은 대여한 ID, Password, 주소에 맞게끔 수정해주세요!
-      'mongodb+srv://qkrtmdduq112:fmffmf33@express-mongo.annj3kn.mongodb.net/?retryWrites=true&w=majority&appName=express-mongo',
-      {
-        dbName: 'todo_memo', // todo_memo 데이터베이스명을 사용합니다.
-      }
-    )
-    .then(() => console.log('MongoDB 연결에 성공하였습니다.'))
-    .catch((err) => console.log(`MongoDB 연결에 실패하였습니다. ${err}`));
+const connect = async () => {
+  try {
+    const mongoURI = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}/?retryWrites=true&w=majority&appName=express-mongo`;
+    const dbName = process.env.DB_NAME;
+    
+    const connection = await mongoose.connect(mongoURI, {
+      dbName,
+    });
+    
+    console.log('MongoDB 연결에 성공하였습니다.');
+    return connection;
+  } catch (error) {
+    console.error(`MongoDB 연결에 실패하였습니다. ${error}`);
+    throw error;
+  }
 };
 
 mongoose.connection.on('error', (err) => {
